@@ -41,49 +41,170 @@ import { useState } from 'react';
 
 export default function Form() {
   const [person, setPerson] = useState({
-    firstName: 'Barbara',
-    lastName: 'Hepworth',
-    email: 'bhepworth@sculpture.com'
+    name : 'Niki de Saint Phalle',
+    artwork: {
+      title: 'Blue Nana',
+      city: 'Hamburg',
+      image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+    }
+
   });
 
-    function handelChange(e){
+    function handelNameChange(e){
       setPerson({
-        ...person, [e.target.name]: e.target.value
+        ...person, name:e.target.name
     });
+    }
+    function handelChangeTitail(e){
+      setPerson({
+        ...person, artwork:{
+          ...person.artwork,title:e.target.value
+        }
+      });
+    }
+    function handelChangeCity(e){
+      setPerson({
+        ...person, artwork:{
+          ...person.artwork, city:e.target.value
+        }
+      });
+    }
+    function handelChangeImage(e){
+      setPerson({
+        ...person,artwork:{
+          ...person.artwork, image:e.target.value
+        }
+      });
     }
 
   return (
     <>
       <label>
-        First name:
+         name:
         <input
-                  name="firstName"
-
-          value={person.firstName}
-          onChange={handelChange}
+          value={person.name}
+          onChange={handelNameChange}
         />
       </label>
       <label>
-        Last name:
+        title
         <input
-        name="lastName"
-          value={person.lastName}
-          onChange={handelChange}
+          value={person.artwork.title}
+          onChange={handelChangeTitail}
         />
       </label>
       <label>
-        Email:
+        city
         <input
-        name="email"
-          value={person.email}
-          onChange={handelChange}
+          value={person.artwork.city}
+          onChange={handelChangeCity}
+        />
+      </label>
+      <label>
+        Image
+        <input 
+          value={person.artwork.value}
+          onChange={handelChangeImage}
         />
       </label>
       <p>
-        {person.firstName}{' '}
-        {person.lastName}{' '}
-        ({person.email})
+      <i>{person.artwork.title}</i>
+        {' by '}
+        {person.name}
+        <br />
+        (located in {person.artwork.city})
       </p>
+      <img 
+        src={person.artwork.image} 
+        alt={person.artwork.title}
+        />
+    </>
+  );
+}
+
+
+
+updatePerson(draft => {
+  draft.artwork.city = 'Lagos';
+});
+
+import { useImmer } from 'use-immer';
+
+export default function Form() {
+  const [person, updatePerson] = useImmer({
+    name: 'Niki de Saint Phalle',
+    artwork: {
+      title: 'Blue Nana',
+      city: 'Hamburg',
+      image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+    }
+  });
+
+  function handleNameChange(e) {
+    updatePerson(draft => {
+      draft.name = e.target.value;
+    });
+  }
+
+  function handleTitleChange(e) {
+    updatePerson(draft => {
+      draft.artwork.title = e.target.value;
+    });
+  }
+
+  function handleCityChange(e) {
+    updatePerson(draft => {
+      draft.artwork.city = e.target.value;
+    });
+  }
+
+  function handleImageChange(e) {
+    updatePerson(draft => {
+      draft.artwork.image = e.target.value;
+    });
+  }
+
+  return (
+    <>
+      <label>
+        Name:
+        <input
+          value={person.name}
+          onChange={handleNameChange}
+        />
+      </label>
+      <label>
+        Title:
+        <input
+          value={person.artwork.title}
+          onChange={handleTitleChange}
+        />
+      </label>
+      <label>
+        City:
+        <input
+          value={person.artwork.city}
+          onChange={handleCityChange}
+        />
+      </label>
+      <label>
+        Image:
+        <input
+          value={person.artwork.image}
+          onChange={handleImageChange}
+        />
+      </label>
+      <p>
+        <i>{person.artwork.title}</i>
+        {' by '}
+        {person.name}
+        <br />
+        (located in {person.artwork.city})
+      </p>
+      <img 
+        src={person.artwork.image} 
+        alt={person.artwork.title}
+      />
     </>
   );
 }
