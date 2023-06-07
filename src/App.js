@@ -397,77 +397,123 @@
 // }
 
 
-import { useImmer } from 'use-immer';
-import { initialTravelPlan } from './places.js';
+// import { useImmer } from 'use-immer';
+// import { initialTravelPlan } from './places.js';
 
-export default function TravelPlan() {
-  const [plan, updatePlan] = useImmer(initialTravelPlan);
+// export default function TravelPlan() {
+//   const [plan, updatePlan] = useImmer(initialTravelPlan);
 
-  function handleComplete(parentId, childId) {
-    updatePlan(draft => {
-      // Remove from the parent place's child IDs.  
-      const parent = draft[parentId];
-      parent.childIds = parent.childIds
-        .filter(id => id !== childId);
-        console.log("parent value", parentId);
-        console.log("childids value", childId)
+//   function handleComplete(parentId, childId) {
+//     updatePlan(draft => {
+//       // Remove from the parent place's child IDs.  
+//       const parent = draft[parentId];
+//       parent.childIds = parent.childIds
+//         .filter(id => id !== childId);
+//         console.log("parent value", parentId);
+//         console.log("childids value", childId)
 
-      // Forget this place and all its subtree.
-      deleteAllChildren(childId);
-      function deleteAllChildren(id) {
-        const place = draft[id];
-        place.childIds.forEach(deleteAllChildren);
-        delete draft[id];
-        // console.log("forech value:", place)
-      }
-    });
+//       // Forget this place and all its subtree.
+//       deleteAllChildren(childId);
+//       function deleteAllChildren(id) {
+//         const place = draft[id];
+//         place.childIds.forEach(deleteAllChildren);
+//         delete draft[id];
+//         // console.log("forech value:", place)
+//       }
+//     });
+//   }
+
+//   const root = plan[0];
+//   const planetIds = root.childIds;
+//   return (
+//     <>
+//       <h2>Places to visit</h2>
+//       <ol>
+//         {planetIds.map(id => (
+//           <PlaceTree
+//             key={id}
+//             id={id}
+//             parentId={0}
+//             placesById={plan}
+//             onComplete={handleComplete}
+//           />
+//         ))}
+//       </ol>
+//     </>
+//   );
+// }
+
+// function PlaceTree({ id, parentId, placesById, onComplete }) {
+//   const place = placesById[id];
+//   const childIds = place.childIds;
+//   return (
+//     <li>
+//       {place.title}
+//       <button onClick={() => {
+//         onComplete(parentId, id);
+//       }}>
+//         Complete
+//       </button>
+//       {childIds.length > 0 &&
+//         <ol>
+//           {childIds.map(childId => (
+//             <PlaceTree
+//               key={childId}
+//               id={childId}
+//               parentId={id}
+//               placesById={placesById}
+//               onComplete={onComplete}
+//             />
+//           ))}
+//         </ol>
+//       }
+//     </li>
+//   );
+// }
+
+import { useState } from 'react';
+import { initialLetters } from './data.js';
+import Letter from './Letter.js';
+
+export default function MailClient() {
+  const [letters, setLetters] = useState(initialLetters);
+  const [highlightedLetterId, setHighlightedLetterId] = useState(null);
+
+  function handleHover(letterId) {
+    setHighlightedLetterId(letterId);
   }
 
-  const root = plan[0];
-  const planetIds = root.childIds;
+  function handleStar(starredId) {
+    setLetters(letters.map(letter => {
+      if (letter.id === starredId) {
+        return {
+          ...letter,
+          isStarred: !letter.isStarred
+        };
+      } else {
+        return letter;
+      }
+    }));
+  }
+
   return (
     <>
-      <h2>Places to visit</h2>
-      <ol>
-        {planetIds.map(id => (
-          <PlaceTree
-            key={id}
-            id={id}
-            parentId={0}
-            placesById={plan}
-            onComplete={handleComplete}
+      <h2>Inbox</h2>
+      <ul>
+        {letters.map((letter) => {
+         return(
+          <Letter
+            key={letter.id}
+            letter={letter}
+            isHighlighted={
+              letter.id === highlightedLetterId
+            }
+            onHover={handleHover}
+            onToggleStar={handleStar}
           />
-        ))}
-      </ol>
+          )
+        })}
+      </ul>
     </>
   );
 }
-
-function PlaceTree({ id, parentId, placesById, onComplete }) {
-  const place = placesById[id];
-  const childIds = place.childIds;
-  return (
-    <li>
-      {place.title}
-      <button onClick={() => {
-        onComplete(parentId, id);
-      }}>
-        Complete
-      </button>
-      {childIds.length > 0 &&
-        <ol>
-          {childIds.map(childId => (
-            <PlaceTree
-              key={childId}
-              id={childId}
-              parentId={id}
-              placesById={placesById}
-              onComplete={onComplete}
-            />
-          ))}
-        </ol>
-      }
-    </li>
-  );
-}
-
