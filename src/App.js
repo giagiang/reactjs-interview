@@ -471,49 +471,103 @@
 //   );
 // }
 
+
+
+
+
+// challenges 3 
+// import { useState } from 'react';
+// import { initialLetters } from './data.js';
+// import Letter from './Letter.js';
+
+// export default function MailClient() {
+//   const [letters, setLetters] = useState(initialLetters);
+//   const [highlightedLetterId, setHighlightedLetterId] = useState(null);
+
+//   function handleHover(letterId) {
+//     setHighlightedLetterId(letterId);
+//   }
+
+//   function handleStar(starredId) {
+//     setLetters(letters.map(letter => {
+//       if (letter.id === starredId) {
+//         return {
+//           ...letter,
+//           isStarred: !letter.isStarred
+//         };
+//       } else {
+//         return letter;
+//       }
+//     }));
+//   }
+
+//   return (
+//     <>
+//       <h2>Inbox</h2>
+//       <ul>
+//         {letters.map((letter) => {
+//          return(
+//           <Letter
+//             key={letter.id}
+//             letter={letter}
+//             isHighlighted={
+//               letter.id === highlightedLetterId
+//             }
+//             onHover={handleHover}
+//             onToggleStar={handleStar}
+//           />
+//           )
+//         })}
+//       </ul>
+//     </>
+//   );
+// }
+ 
+
+// challeges 4 
 import { useState } from 'react';
-import { initialLetters } from './data.js';
+import { letters } from './data.js';
 import Letter from './Letter.js';
 
 export default function MailClient() {
-  const [letters, setLetters] = useState(initialLetters);
-  const [highlightedLetterId, setHighlightedLetterId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
-  function handleHover(letterId) {
-    setHighlightedLetterId(letterId);
-  }
+  // TODO: allow multiple selection
+  const selectedCount = 1;
 
-  function handleStar(starredId) {
-    setLetters(letters.map(letter => {
-      if (letter.id === starredId) {
-        return {
-          ...letter,
-          isStarred: !letter.isStarred
-        };
-      } else {
-        return letter;
-      }
-    }));
+  function handleToggle(toggledId) {
+    // TODO: allow multiple selection
+      // console.log(selectedIds);
+    if (selectedIds.includes(toggledId)){
+      setSelectedIds(selectedIds.filter(id => id !== toggledId))
+    }else{
+      setSelectedIds([...selectedIds, toggledId]);}
+    console.log(toggledId);
   }
 
   return (
     <>
       <h2>Inbox</h2>
       <ul>
-        {letters.map((letter) => {
-         return(
+        {letters.map(letter => (
           <Letter
             key={letter.id}
             letter={letter}
-            isHighlighted={
-              letter.id === highlightedLetterId
+            isSelected={
+              // TODO: allow multiple selection
+             selectedIds.includes(letter.id)
             }
-            onHover={handleHover}
-            onToggleStar={handleStar}
+            onToggle={handleToggle}
           />
-          )
-        })}
+        ))}
+        <hr />
+        <p>
+          <b>
+            You selected {selectedCount} letters
+          </b>
+        </p>
       </ul>
     </>
   );
 }
+

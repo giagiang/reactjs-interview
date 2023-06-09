@@ -1,27 +1,52 @@
-export default function Letter({
+//chalenges 3
+// export default function Letter({
+//     letter,
+//     isHighlighted,
+//     onHover,
+//     onToggleStar,
+//   }) {
+//     return (
+//       <li
+//         className={
+//           isHighlighted ? 'highlighted' : ''
+//         }
+//         onFocus={() => {
+//           onHover(letter.id);        
+//         }}
+//         onPointerMove={() => {
+//           onHover(letter.id);
+//         }}
+//       >
+//         <button onClick={() => {
+//           onToggleStar(letter.id);
+//         }}>
+//           {letter.isStarred ? 'Unstar' : 'Star'}
+//         </button>
+//         {letter.subject}
+//       </li>
+//     )
+//   }
+
+  // challegen4
+  export default function Letter({
     letter,
-    isHighlighted,
-    onHover,
-    onToggleStar,
+    onToggle,
+    isSelected,
   }) {
     return (
-      <li
-        className={
-          isHighlighted ? 'highlighted' : ''
-        }
-        onFocus={() => {
-          onHover(letter.id);        
-        }}
-        onPointerMove={() => {
-          onHover(letter.id);
-        }}
-      >
-        <button onClick={() => {
-          onToggleStar(letter.id);
-        }}>
-          {letter.isStarred ? 'Unstar' : 'Star'}
-        </button>
-        {letter.subject}
+      <li className={
+        isSelected ? 'selected' : ''
+      }>
+        <label>
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => {
+              onToggle(letter.id);
+            }}
+          />
+          {letter.subject}
+        </label>
       </li>
     )
   }

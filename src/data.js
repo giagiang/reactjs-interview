@@ -107,10 +107,10 @@
 // }];
 
 
-export const initialLetters = [{
+export const letters = [{
   id: 0,
   subject: 'Ready for adventure?',
-  isStarred: false,
+  isStarred: true,
 }, {
   id: 1,
   subject: 'Time to check in!',
