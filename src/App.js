@@ -66,13 +66,6 @@
 //     </>
 //   )
 // }
-
-
-
-
-
-
-
 // import { useRef, useState } from "react";
 
 // function App() {
@@ -101,59 +94,123 @@
 // }
 // export default App;
 
-import {useState, createContext,useContext} from "react";
+// import { useState, createContext, useContext } from "react";
 
-const UserContext = createContext();
-function Component1(){
-  const [user, setUser ] = useState("he lo  xin chào ");
+// const UserContext = createContext();
+// function Component1() {
+//   const [user, setUser] = useState("he lo  xin chào ");
 
+//   return (
+//     <UserContext.Provider value={user}>
+//       <h1>{`Hello ${user}!`}</h1>
+//       <Component2 />
+//     </UserContext.Provider>
+//   );
+// }
+// console.log(UserContext.Provider);
+
+// function Component2() {
+//   return (
+//     <>
+//       <h1>component 2</h1>
+//       <Component3 />
+//     </>
+//   );
+// }
+
+// function Component3() {
+//   return (
+//     <>
+//       <h1>Component3</h1>
+//       <Component4 />
+//     </>
+//   );
+// }
+// function Component4() {
+//   return (
+//     <>
+//       <h1>Component4</h1>
+//       <Component5 />
+//     </>
+//   );
+// }
+
+// function Component5() {
+//   const user = useContext(UserContext);
+//   return (
+//     <>
+//       <h1>component 5 </h1>
+//       <h2> {`hello ${user} again! `}</h2>
+//     </>
+//   );
+// }
+
+// export default Component1;
+
+// import {useState, useEffect, useRef} from  'react' ;
+
+// function App() {
+//   const  [inputValue, setInputValue] = useState ("") ;
+//   const count = useRef(0)
+//   useEffect(()=> {
+//     count.current  = count.current + 1 ;
+//     console.log(count.current)
+
+//   });
+//   return (
+//     <>
+//      <input
+//       type  = "text"
+//       value  = {inputValue}
+//       onChange = {(e) => setInputValue(e.target.value)}
+//      />
+//      <h1> render Count :  {count.current  }</h1>
+//     </>
+//   )
+// }
+// export default App\\
+
+import { useState, useEffect } from 'react';
+import { createConnection, sendMessage } from "./chat.js";
+
+const serverUrl = "https://localhost:1234";
+
+function ChatRoom({ roomId }) {
+  const [message, setMessage] = useState('');
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+  function handleSendClick() {
+    sendMessage(message);
+  }
   return (
-    <UserContext.Provider value = {user}>
-    <h1>{`Hello ${user}!`}</h1>
-    <Component2/>
-    </UserContext.Provider>
+    <>
+      <h1> Welcome to the {roomId} room! </h1>
+      <input value={message} onChange={e => setMessage(e.target.value)} />
+      <button onClick={handleSendClick}>Send</button>
+    </>
   );
 }
-function Component2(){
+export default function App() {
+  const [roomId, setRoomId] = useState('general');
+  const [show, setShow] = useState(false);
   return (
     <>
-      <h1>
-        component 2
-      </h1>
-      <Component3/>
+      <label>
+        Choose the chat room:{' '}
+        <select value={roomId} onChange={e => setRoomId(e.target.value)}>
+          <option value="general">general</option>
+          <option value="travel"> travel</option>
+          <option value="music">music</option>
+        </select>
+      </label>
+      <button onClick={() => setShow(!show)}>
+        {show ? 'Close chat' : 'Open chat'}
+      </button>
+      {show && <hr />}
+      {show && <ChatRoom roomId={roomId} />}
     </>
-  )
-
+  );
 }
-
-function Component3(){
-  return (
-    <>
-      <h1>Component3</h1>
-      <Component4/>
-    </>
-  )
-}
-function Component4 () { 
-  return (
-    <>
-      <h1>Component4</h1> 
-      <Component5/>
-    </>
-  )
-}
-
-function Component5(){
-  const user = useContext(UserContext)
-  return (
-    <>
-      <h1>component 5 </h1>
-      <h2> { `hello ${user} again! `}</h2>
-    </>
-
-  )
-}
-
-export default Component1
-
-
