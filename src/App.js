@@ -170,47 +170,139 @@
 // }
 // export default App\\
 
-import { useState, useEffect } from 'react';
-import { createConnection, sendMessage } from "./chat.js";
+// import { useState, useEffect } from 'react';
+// import { createConnection, sendMessage } from "./chat.js";
 
-const serverUrl = "https://localhost:1234";
+// const serverUrl = "https://localhost:1234";
 
-function ChatRoom({ roomId }) {
-  const [message, setMessage] = useState('');
-  useEffect(() => {
-    const connection = createConnection(serverUrl, roomId);
-    connection.connect();
-    return () => connection.disconnect();
-  }, [roomId]);
-  function handleSendClick() {
-    sendMessage(message);
+// function ChatRoom({ roomId }) {
+//   const [message, setMessage] = useState('');
+//   useEffect(() => {
+//     const connection = createConnection(serverUrl, roomId);
+//     connection.connect();
+//     return () => connection.disconnect();
+//   }, [roomId]);
+//   function handleSendClick() {
+//     sendMessage(message);
+//   }
+//   return (
+//     <>
+//       <h1> Welcome to the {roomId} room! </h1>
+//       <input value={message} onChange={e => setMessage(e.target.value)} />
+//       <button onClick={handleSendClick}>Send</button>
+//     </>
+//   );
+// }
+// export default function App() {
+//   const [roomId, setRoomId] = useState('general');
+//   const [show, setShow] = useState(false);
+//   return (
+//     <>
+//       <label>
+//         Choose the chat room:{' '}
+//         <select value={roomId} onChange={e => setRoomId(e.target.value)}>
+//           <option value="general">general</option>
+//           <option value="travel"> travel</option>
+//           <option value="music">music</option>
+//         </select>
+//       </label>
+//       <button onClick={() => setShow(!show)}>
+//         {show ? 'Close chat' : 'Open chat'}
+//       </button>
+//       {show && <hr />}
+//       {show && <ChatRoom roomId={roomId} />}
+//     </>
+//   );
+// }
+
+// import {useState } from 'react'
+// import Content from  './Content'
+
+// function App(){
+//   const[show,setShow] = useState(false)
+//   return (
+//     <div style=  {{padding:20 }}>
+//        <button onClick= {() => setShow(!show )}>Toggle</button>
+//        {show && <Content />}
+//     </div>
+//   )
+// }
+// export default App
+
+// import { useRef, useEffect } from "react";
+
+// const App = () => {
+//   const ref = useRef(null);
+//   useEffect (() => {
+//     const handleClick = event =>{
+//       console.log('button clicked')
+//     };
+//     const element = ref.current;
+//     element.addEventListener('click', handleClick);
+//     return () =>{
+//       element.addEventListener('click', handleClick);
+//     }
+//   },[]);
+//   return(
+//     <div>
+//       <button ref ={ref}>click</button>
+//     </div>
+//   );
+// };
+// export default App;
+
+// import { useRef, useState} from 'react' ;
+
+// export default function StopWatch(){
+//   const[startTime, setStartTime ] = useState(null);
+//   const[now,setNow] = useState(null);
+//   const intervalRef = useRef(null);
+//   function handleStart(){
+//     setStartTime(Date.now());
+//     setNow(Date.now());
+
+//     clearInterval(intervalRef.current);
+//     intervalRef.current = setInterval(()=>{
+//       setNow(Date.now());
+//     },10)
+//   }
+//   function handleStop(){
+//     clearInterval(intervalRef.current);
+//   }
+
+//   let secondPassed = 0;
+//   if(startTime != null && now != null) {
+//     secondPassed = (now - startTime ) / 1000;
+//   }
+//   return (
+//     <>
+//       <h1> time passed: {secondPassed.toFixed(2)}</h1>
+//       <button onClick={handleStart}>Start</button>
+//       <br/>
+//       <button onClick={handleStop}>Stop</button>
+
+//     </>
+//   )
+// }
+
+import { useState,createContext} from "react";   
+import Content from "./Content";
+import './App.css'
+
+export const ThemeContext = createContext()
+
+function App() {
+  const [theme, setTheme] = useState("dark");
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light':'dark')
   }
-  return (
-    <>
-      <h1> Welcome to the {roomId} room! </h1>
-      <input value={message} onChange={e => setMessage(e.target.value)} />
-      <button onClick={handleSendClick}>Send</button>
-    </>
+   return (
+    <ThemeContext.Provider value={theme}>
+    <div style={{ padding: 20 }}>
+      <button onClick={toggleTheme}> Toggle theme</button>
+      <Content />
+    </div>
+    </ThemeContext.Provider>
   );
 }
-export default function App() {
-  const [roomId, setRoomId] = useState('general');
-  const [show, setShow] = useState(false);
-  return (
-    <>
-      <label>
-        Choose the chat room:{' '}
-        <select value={roomId} onChange={e => setRoomId(e.target.value)}>
-          <option value="general">general</option>
-          <option value="travel"> travel</option>
-          <option value="music">music</option>
-        </select>
-      </label>
-      <button onClick={() => setShow(!show)}>
-        {show ? 'Close chat' : 'Open chat'}
-      </button>
-      {show && <hr />}
-      {show && <ChatRoom roomId={roomId} />}
-    </>
-  );
-}
+export default App;
